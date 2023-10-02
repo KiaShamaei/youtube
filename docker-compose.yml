@@ -1,0 +1,20 @@
+version: '1'
+services:
+  postgres:
+    container_name: youtube
+    image: postgres:13.4
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: youtube
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - 5454:5432
+    networks:
+      - kia-uploader
+#add springboot here if need
+volumes:
+  pg_data:
+networks:
+  kia-uploader:
