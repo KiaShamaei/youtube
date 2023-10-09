@@ -1,6 +1,6 @@
 create table media
 (
-    id                 BIGINT PRIMARY KEY,
+    id                 bigint NOT NULL,
     original_path      text,
     original_file_name text                  not null,
     original_file_ext  character varying(10) not null,

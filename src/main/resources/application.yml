@@ -16,7 +16,6 @@ spring:
     password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
-    database-platform: org.hibernate.dialect.postgis.PostgisPG13Dialect
     database: postgresql
     generate-ddl: false
     hibernate:
@@ -30,7 +29,7 @@ spring:
         properties:
           hibernate:
             format_sql: false
-            dialect: org.hibernate.spatial.dialect.postgis.PostgisPG13Dialect
+            dialect: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
             connection:
               pool_size: 20
         jdbc:
