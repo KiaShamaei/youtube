@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "media")
@@ -18,12 +18,13 @@ public class UploadMedia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     @Column(name = "original_path")
     public String originalFilePath;
-
+    @NonNull
     @Column(name = "original_file_name", nullable = false)
     public String originalFileName;
-
+    @NonNull
     @Column(name = "original_file_ext", nullable = false)
     public String originalFileExtension;
 
@@ -31,7 +32,7 @@ public class UploadMedia {
     @Column(name = "is_write")
     private boolean write;
 
-
+    @NonNull
     @Column(name = "compressed_path")
     public String compressedFilePath;
 
@@ -46,9 +47,11 @@ public class UploadMedia {
     @Column(name = "is_thumbnail")
     private boolean thumbnail;
 
+    @NonNull
     @Column(name = "created_by")
     private String createdBy;
 
+    @NonNull
     @Column(name = "created_date", nullable = false)
     private Timestamp createdDate;
 

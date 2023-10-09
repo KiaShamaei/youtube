@@ -31,7 +31,7 @@ public class MediaUploaderController {
     private UploadMediaService service;
 
     @PostMapping(
-            value = "/upload/video",
+            value = "/v1/upload/video",
             consumes = {
                     MediaType.MULTIPART_FORM_DATA_VALUE,
                     MediaType.APPLICATION_OCTET_STREAM_VALUE})
@@ -40,39 +40,19 @@ public class MediaUploaderController {
         String contentType = file.getContentType();
 
         if (!contentVideos.contains(contentType)) {
-            log.info("ini bukan video dengan type: {}", contentType);
-            return badRequest().body("File bukan video!");
+            log.info("invalid  type: {}", contentType);
+            return badRequest().body(" invalid  type!");
         }
 
         UploadMedia metaData = service.createFile(file);
         return ok(metaData);
     }
 
-    @GetMapping("/download/{id}/thumbnail")
-    public ResponseEntity<?> getThumbnailById(@PathVariable("id") String id) {
-        Optional<UploadMedia> mediaOptional = service.findById(id);
-        if (!mediaOptional.isPresent()) {
-            return noContent().build();
-        }
 
-        UploadMedia media = mediaOptional.get();
-        if (!media.isThumbnail()) {
-            return new ResponseEntity<>(HttpStatus.LOCKED);
-        }
 
-        String path = media.getThumbnailPath();
-        try {
-            byte[] file = service.getFile(path);
-            String encodeString = Base64.getEncoder().encodeToString(file);
-            return ok(encodeString);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/download/{id}/video/original")
+    @GetMapping("/v1/download/{id}/video/")
     public ResponseEntity<?> getVideoOriginal(@PathVariable("id") String id) {
+        log.info("/v1/download/{id}/video/ is call");
         Optional<UploadMedia> mediaOptional = service.findById(id);
         if (!mediaOptional.isPresent()) {
             return noContent().build();
@@ -93,26 +73,25 @@ public class MediaUploaderController {
         }
     }
 
-    @GetMapping("/download/{id}/video/compressed")
-    public ResponseEntity<?> getVideoCompressed(@PathVariable("id") String id) {
-        Optional<UploadMedia> mediaOptional = service.findById(id);
-        if (!mediaOptional.isPresent()) {
-            return noContent().build();
-        }
+    /**
+     * this part need pagging in real project
+     * just for test
+     * @return
+     */
+    @GetMapping("/v1/download/video/all")
+    public ResponseEntity<?> getAllVideos() {
 
-        UploadMedia media = mediaOptional.get();
-        if (!media.isCompressed()) {
-            return new ResponseEntity<>(HttpStatus.LOCKED);
-        }
-
-        String path = media.getCompressedFilePath();
+        log.info("/v1/download/video/all is call");
         try {
-            byte[] file = service.getFile(path);
-            return ok(file);
+            var result = service.findAll();
+            return ok(result);
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
 
 }

@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,6 +34,20 @@ public class UploadMediaService {
 
     public Optional<UploadMedia> findById(String id) {
         return dao.findById(id);
+    }
+
+    public List<byte[]> findAll() throws IOException{
+
+        var result = dao.getAll();
+        List<byte[]> output=  result.parallelStream().map(t-> {
+            try {
+                return getFile(t.getOriginalFilePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }).collect(Collectors.toList());
+        return output;
     }
 
     @Transactional
